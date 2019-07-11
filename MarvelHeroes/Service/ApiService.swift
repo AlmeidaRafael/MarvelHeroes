@@ -1,0 +1,36 @@
+//
+//  ApiService.swift
+//  MarvelHeroes
+//
+//  Created by RafaelAlmeida on 10/07/19.
+//  Copyright © 2019 RafaelAlmeida. All rights reserved.
+//
+
+import Foundation
+
+class ApiService: NSObject {
+    static let shared = ApiService()
+    
+    func fetchAllHeroes(completion: @escaping (ApiResponse?, Error?) -> ()) {
+        guard let url = APIUtils().getUrl() else { return }
+            URLSession.shared.dataTask(with: url) { (data, resp, err) in
+            if let err = err {
+                completion(nil, err)
+                print("Failed to fetch heroes: ", err)
+                return
+            }
+            
+            guard let data = data else { return }
+            do {
+                let heroes = try JSONDecoder().decode(ApiResponse.self, from: data)
+                DispatchQueue.main.async {
+                    print(heroes)
+                    completion(heroes, nil)
+                }
+            } catch let jsonErr {
+                print("Failed to decode: ", jsonErr)
+            }
+        }.resume()
+    }
+}
+

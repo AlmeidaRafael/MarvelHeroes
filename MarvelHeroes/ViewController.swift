@@ -12,9 +12,16 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        fetchData()
     }
-
-
+    
+    fileprivate func fetchData() {
+        ApiService.shared.fetchAllHeroes { (heroes, err) in
+            if let err = err {
+                print("Failed to fetch heroes:", err)
+                return
+            }
+        }
+    }
 }
 
