@@ -52,3 +52,16 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+extension HomeViewController {
+    func downloadImage(url: String) {
+//        let task = URLSession.shared.downloadTask(with: url) { localURL, urlResponse, error in
+//            if let localURL = localURL {
+//                if let string = try? String(contentsOf: localURL) {
+//                    print(string)
+//                }
+//            }
+//        }
+//        
+//        task.resume()
+    }
+}

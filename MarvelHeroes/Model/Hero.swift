@@ -12,5 +12,17 @@ struct Hero: Decodable {
     let id: Int
     let name: String
     let description: String
+    let thumbnail: Image
 }
+
+struct Image: Decodable {
+    let path: String
+    let imgExtension: String
+    
+    enum CodingKeys: String, CodingKey {
+        case imgExtension = "extension", path
+    }
+}
+
+
 
