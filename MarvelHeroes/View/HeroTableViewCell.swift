@@ -16,6 +16,14 @@ class HeroTableViewCell: UITableViewCell {
     @IBOutlet weak var viewCard: UIView!
     @IBOutlet weak var viewContainer: UIView!
     
+    var heroViewModel: HeroViewModel! {
+        didSet {
+            lbName.text = heroViewModel.hero.name
+            lbDescription.text = heroViewModel.hero.description
+            imgHero.image = heroViewModel.image
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -33,11 +41,5 @@ class HeroTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
-    }
-    
-    func setupCell(hero: Hero, image: UIImage?) {
-        lbName?.text = hero.name
-        lbDescription?.text = hero.description
-        imgHero.image = image
     }
 }

@@ -23,6 +23,3 @@ struct Image: Decodable {
         case imgExtension = "extension", path
     }
 }
-
-
-

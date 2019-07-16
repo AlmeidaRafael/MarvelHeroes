@@ -38,6 +38,7 @@ class HomeViewController: UIViewController {
     private func setupImageTasks(totalImages: Int) {
         let session = URLSession(configuration: URLSessionConfiguration.default)
         
+        
         for i in 0..<totalImages {
             let hero = heroesArray[i]
             let url = hero.thumbnail.path + APIUtils.imageLandscapeAmazing + hero.thumbnail.imgExtension
@@ -47,6 +48,7 @@ class HomeViewController: UIViewController {
         }
     }
 }
+
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return heroesArray.count
@@ -54,7 +56,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "HeroTableViewCell") as! HeroTableViewCell
-        cell.setupCell(hero: heroesArray[indexPath.row], image: imageTasks[indexPath.row]?.image)
+        cell.heroViewModel = HeroViewModel(hero: heroesArray[indexPath.row], image: imageTasks[indexPath.row]?.image)
         return cell
     }
     
