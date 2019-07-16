@@ -14,13 +14,15 @@ class HeroTableViewCell: UITableViewCell {
     @IBOutlet weak var lbName: UILabel!
     @IBOutlet weak var lbDescription: UILabel!
     @IBOutlet weak var viewCard: UIView!
+    @IBOutlet weak var viewContainer: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        viewContainer.layer.cornerRadius = 20
         viewCard.layer.cornerRadius = 20
         viewCard.layer.shadowColor = UIColor.black.cgColor
-        viewCard.layer.shadowOpacity = 0.4
+        viewCard.layer.shadowOpacity = 0.3
         viewCard.layer.shadowOffset = .zero
         viewCard.layer.shadowRadius = 6
         viewCard.layer.shouldRasterize = true
@@ -33,9 +35,9 @@ class HeroTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func setupCell(name: String, description: String) {
-        lbName?.text = name
-        lbDescription?.text = description
+    func setupCell(hero: Hero, image: UIImage?) {
+        lbName?.text = hero.name
+        lbDescription?.text = hero.description
+        imgHero.image = image
     }
-    
 }

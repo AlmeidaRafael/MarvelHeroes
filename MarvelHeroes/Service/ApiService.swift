@@ -13,7 +13,7 @@ class ApiService: NSObject {
     
     func fetchAllHeroes(completion: @escaping (ApiResponse?, Error?) -> ()) {
         guard let url = APIUtils().getUrl() else { return }
-            URLSession.shared.dataTask(with: url) { (data, resp, err) in
+        URLSession.shared.dataTask(with: url) { (data, resp, err) in
             if let err = err {
                 completion(nil, err)
                 print("Failed to fetch heroes: ", err)
@@ -31,6 +31,24 @@ class ApiService: NSObject {
                 print("Failed to decode: ", jsonErr)
             }
         }.resume()
+    }
+    
+    func downloadImage(url: String, completion: @escaping (Data?, Error?) -> ()) {
+        guard let imageUrl = URL(string: url) else { return }
+        let downloadTask = URLSession.shared.downloadTask(with: imageUrl) { localURL, resp, err in
+            if let err = err {
+                completion(nil, err)
+                print("Failed to get image: ", err)
+                return
+            }
+            
+            if let localURL = localURL {
+                if let image = try? Data(contentsOf: localURL) {
+                    completion(image, nil)
+                }
+            }
+        }
+        downloadTask.resume()
     }
 }
 

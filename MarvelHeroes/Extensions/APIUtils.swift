@@ -10,6 +10,9 @@ import Foundation
 
 struct APIUtils {
     static let shared = APIUtils()
+    static let imageProfileLarge = "/standard_large."
+    static let imageLandscapeAmazing = "/landscape_amazing."
+    
     let baseUrl = "https://gateway.marvel.com/"
     let apiKey = Bundle.main.object(forInfoDictionaryKey: "Marvel Api Key") as? String ?? ""
     let privateKey = Bundle.main.object(forInfoDictionaryKey: "Marvel Api Private Key") as? String ?? ""
@@ -21,11 +24,3 @@ struct APIUtils {
        return URL(string: urlString) ?? nil
     }
 }
-
-
-//var params = [String:Any]()
-//let ts = String(Date.timeIntervalBetween1970AndReferenceDate)
-//params["ts"] = ts
-//params["apikey"] = publicKey
-//params["hash"] = (ts + privateKey + publicKey).md5Value
-//let jsonData = try! JSONSerialization.data(withJSONObject: params, options: [])

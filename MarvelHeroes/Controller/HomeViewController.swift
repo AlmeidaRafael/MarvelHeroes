@@ -12,6 +12,7 @@ class HomeViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     var heroesArray = [Hero]()
+    var imageTasks = [Int: ImageTask]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,9 +28,22 @@ class HomeViewController: UIViewController {
             } else {
                 if let heroes = response?.data.results {
                     self.heroesArray = heroes
+                    self.setupImageTasks(totalImages: self.heroesArray.count)
                     self.tableView.reloadData()
                 }
             }
+        }
+    }
+    
+    private func setupImageTasks(totalImages: Int) {
+        let session = URLSession(configuration: URLSessionConfiguration.default)
+        
+        for i in 0..<totalImages {
+            let hero = heroesArray[i]
+            let url = hero.thumbnail.path + APIUtils.imageLandscapeAmazing + hero.thumbnail.imgExtension
+            let finalUrl = URL(string: url)!
+            let imageTask = ImageTask(position: i, url: finalUrl, session: session, delegate: self)
+            imageTasks[i] = imageTask
         }
     }
 }
@@ -40,28 +54,29 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "HeroTableViewCell") as! HeroTableViewCell
-       
-        cell.setupCell(name: heroesArray[indexPath.row].name, description: heroesArray[indexPath.row].description)
-//        cell?.lbName?.text = "CU"
-//        cell.lbDescription?.text = "Cu"
+        cell.setupCell(hero: heroesArray[indexPath.row], image: imageTasks[indexPath.row]?.image)
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        imageTasks[indexPath.row]?.resume()
+    }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        imageTasks[indexPath.row]?.pause()
+    }
 }
 
-extension HomeViewController {
-    func downloadImage(url: String) {
-//        let task = URLSession.shared.downloadTask(with: url) { localURL, urlResponse, error in
-//            if let localURL = localURL {
-//                if let string = try? String(contentsOf: localURL) {
-//                    print(string)
-//                }
-//            }
+extension HomeViewController: ImageTaskDownloadedDelegate {
+    func imageDownloaded(position: Int) {
+        self.tableView.reloadRows(at: [IndexPath(row: position, section: 0)], with: .automatic)
+        
+//        if let selectedImage = self.selectedImage, selectedImage.row == position, let image = imageTasks[position]?.image {
+//            selectedImage.imageView.set(image: image)
 //        }
-//        
-//        task.resume()
     }
 }
