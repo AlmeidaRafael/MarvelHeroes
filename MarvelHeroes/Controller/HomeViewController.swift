@@ -34,8 +34,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "HeroTableViewCell") as! HeroTableViewCell
         
         if isLoadingCell(for: indexPath) {
-            
+            cell.setLoadingIndicator(isLoading: true)
         } else {
+            cell.setLoadingIndicator(isLoading: false)
             cell.heroViewModel = HeroViewModel(hero: viewModel.heroes[indexPath.row])
         }
 

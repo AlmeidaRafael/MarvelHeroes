@@ -79,8 +79,13 @@
                             <constraint firstItem="4TF-yv-9kr" firstAttribute="leading" secondItem="aXI-GB-Ovb" secondAttribute="leading" id="h6O-gm-gYY"/>
                         </constraints>
                     </view>
+                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="JHA-kj-Cz7">
+                        <rect key="frame" x="150" y="188.5" width="20" height="20"/>
+                    </activityIndicatorView>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="JHA-kj-Cz7" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="OE3-0Y-srL"/>
+                    <constraint firstItem="JHA-kj-Cz7" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="Orn-0O-wD8"/>
                     <constraint firstAttribute="bottom" secondItem="aXI-GB-Ovb" secondAttribute="bottom" constant="13" id="Ptr-yw-8vC"/>
                     <constraint firstItem="aXI-GB-Ovb" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="13" id="Z0Q-m3-Z2b"/>
                     <constraint firstItem="aXI-GB-Ovb" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="d6L-aE-RqL"/>
@@ -89,6 +94,7 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="activityIndicator" destination="JHA-kj-Cz7" id="2cF-7a-lHY"/>
                 <outlet property="imgHero" destination="rXr-pM-8e4" id="nkz-55-mPg"/>
                 <outlet property="lbDescription" destination="A4g-Rr-YOa" id="tod-zf-rmE"/>
                 <outlet property="lbName" destination="ZRM-8Y-RJr" id="hTv-pI-sH7"/>

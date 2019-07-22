@@ -16,6 +16,7 @@ class HeroTableViewCell: UITableViewCell {
     @IBOutlet weak var lbDescription: UILabel!
     @IBOutlet weak var viewCard: UIView!
     @IBOutlet weak var viewContainer: UIView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     var heroViewModel: HeroViewModel! {
         didSet {
@@ -42,5 +43,15 @@ class HeroTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    
+    func setLoadingIndicator(isLoading: Bool) {
+        if isLoading {
+            activityIndicator.isHidden = false
+            activityIndicator.startAnimating()
+        } else {
+            activityIndicator.isHidden = true
+            activityIndicator.stopAnimating()
+        }
     }
 }
