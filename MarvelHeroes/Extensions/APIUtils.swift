@@ -18,9 +18,10 @@ struct APIUtils {
     let privateKey = Bundle.main.object(forInfoDictionaryKey: "Marvel Api Private Key") as? String ?? ""
     let ts = String(Date.timeIntervalBetween1970AndReferenceDate)
     
-    func getUrl() -> URL?{
+    func getUrl(offSet: Int?) -> URL?{
         let hash = (ts + privateKey + apiKey).md5Value
-        let urlString = baseUrl + "v1/public/characters" + "?apikey=" + apiKey + "&hash=" + hash + "&ts=" + ts
+        let offSetKey = "&offset=\(offSet ?? 0)"
+        let urlString = baseUrl + "v1/public/characters" + "?apikey=" + apiKey + "&hash=" + hash + "&ts=" + ts + offSetKey
        return URL(string: urlString) ?? nil
     }
 }

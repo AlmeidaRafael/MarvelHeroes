@@ -2,7 +2,7 @@
 //  HeroViewModel.swift
 //  MarvelHeroes
 //
-//  Created by RafaelAlmeida on 16/07/19.
+//  Created by RafaelAlmeida on 22/07/19.
 //  Copyright © 2019 RafaelAlmeida. All rights reserved.
 //
 
@@ -11,10 +11,11 @@ import UIKit
 
 struct HeroViewModel {
     let hero: Hero
-    let image: UIImage?
+    let image: URL
     
-    init(hero: Hero, image: UIImage?) {
+    init(hero: Hero) {
         self.hero = hero
-        self.image = image
+        let url = hero.thumbnail.path + APIUtils.imageLandscapeAmazing + hero.thumbnail.imgExtension
+        self.image = URL(string: url)!
     }
 }

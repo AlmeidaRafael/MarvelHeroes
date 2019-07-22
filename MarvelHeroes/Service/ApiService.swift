@@ -11,8 +11,9 @@ import Foundation
 class ApiService: NSObject {
     static let shared = ApiService()
     
-    func fetchAllHeroes(completion: @escaping (ApiResponse?, Error?) -> ()) {
-        guard let url = APIUtils().getUrl() else { return }
+    func fetchAllHeroes(offSet: Int?, completion: @escaping (ApiResponse?, Error?) -> ()) {
+        guard let url = APIUtils().getUrl(offSet: offSet) else { return }
+        print(url)
         URLSession.shared.dataTask(with: url) { (data, resp, err) in
             if let err = err {
                 completion(nil, err)

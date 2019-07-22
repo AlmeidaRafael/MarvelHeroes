@@ -13,72 +13,73 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     var heroesArray = [Hero]()
     var imageTasks = [Int: ImageTask]()
+    private var viewModel: HomeViewModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "HeroTableViewCell", bundle: nil), forCellReuseIdentifier: "HeroTableViewCell")
-        fetchData()
-    }
-    
-    fileprivate func fetchData() {
-        ApiService.shared.fetchAllHeroes { (response, err) in
-            if let err = err {
-                print("Failed to fetch heroes:", err)
-                return
-            } else {
-                if let heroes = response?.data.results {
-                    self.heroesArray = heroes
-                    self.setupImageTasks(totalImages: self.heroesArray.count)
-                    self.tableView.reloadData()
-                }
-            }
-        }
-    }
-    
-    private func setupImageTasks(totalImages: Int) {
-        let session = URLSession(configuration: URLSessionConfiguration.default)
+        tableView.prefetchDataSource = self
         
-        
-        for i in 0..<totalImages {
-            let hero = heroesArray[i]
-            let url = hero.thumbnail.path + APIUtils.imageLandscapeAmazing + hero.thumbnail.imgExtension
-            let finalUrl = URL(string: url)!
-            let imageTask = ImageTask(position: i, url: finalUrl, session: session, delegate: self)
-            imageTasks[i] = imageTask
-        }
+        viewModel = HomeViewModel(delegate: self)
+        viewModel.fetchHeroes()
     }
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return heroesArray.count
+        return viewModel.totalCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "HeroTableViewCell") as! HeroTableViewCell
-        cell.heroViewModel = HeroViewModel(hero: heroesArray[indexPath.row], image: imageTasks[indexPath.row]?.image)
+        
+        if isLoadingCell(for: indexPath) {
+            
+        } else {
+            cell.heroViewModel = HeroViewModel(hero: viewModel.heroes[indexPath.row])
+        }
+
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        imageTasks[indexPath.row]?.resume()
+}
+
+extension HomeViewController: HomeViewModelDelegate {
+    func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?) {
+        guard let newIndexPathsToReload = newIndexPathsToReload else {
+            tableView.isHidden = false
+            tableView.reloadData()
+            return
+        }
+        
+        let indexPathsToReload = visibleIndexPathsToReload(intersecting: newIndexPathsToReload)
+        tableView.reloadRows(at: indexPathsToReload, with: .automatic)
     }
     
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        imageTasks[indexPath.row]?.pause()
+    func onFetchFailed(with reason: String) {
+        print("DEU RUIM")
     }
 }
 
-extension HomeViewController: ImageTaskDownloadedDelegate {
-    func imageDownloaded(position: Int) {
-        self.tableView.reloadRows(at: [IndexPath(row: position, section: 0)], with: .automatic)
-        
-//        if let selectedImage = self.selectedImage, selectedImage.row == position, let image = imageTasks[position]?.image {
-//            selectedImage.imageView.set(image: image)
-//        }
+extension HomeViewController: UITableViewDataSourcePrefetching {
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        if indexPaths.contains(where: isLoadingCell) {
+            viewModel.fetchHeroes()
+        }
+    }
+}
+
+private extension HomeViewController {
+    func isLoadingCell(for indexPath: IndexPath) -> Bool {
+        return indexPath.row >= viewModel.currentCount
+    }
+    
+    func visibleIndexPathsToReload(intersecting indexPaths: [IndexPath]) -> [IndexPath] {
+        let indexPathsForVisibleRows = tableView.indexPathsForVisibleRows ?? []
+        let indexPathsIntersection = Set(indexPathsForVisibleRows).intersection(indexPaths)
+        return Array(indexPathsIntersection)
     }
 }

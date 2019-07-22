@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class HeroTableViewCell: UITableViewCell {
 
@@ -20,7 +21,7 @@ class HeroTableViewCell: UITableViewCell {
         didSet {
             lbName.text = heroViewModel.hero.name
             lbDescription.text = heroViewModel.hero.description
-            imgHero.image = heroViewModel.image
+            imgHero.kf.setImage(with: heroViewModel.image)
         }
     }
     
